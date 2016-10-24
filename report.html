@@ -11852,14 +11852,15 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Calculate number of students</span>
 <span class="n">n_students</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="c1"># TODO: Calculate number of features</span>
-<span class="n">n_features</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1"># Review: Substract the target column as is not a feature</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
 
 <span class="c1"># TODO: Calculate passing students</span>
 <span class="n">n_passed</span> <span class="o">=</span> <span class="n">student_data</span><span class="p">[</span><span class="n">student_data</span><span class="o">.</span><span class="n">passed</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -11889,7 +11890,7 @@ div#notebook {
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total number of students: 395
-Number of features: 31
+Number of features: 30
 Number of students who passed: 265
 Number of students who failed: 130
 Graduation rate of the class: 67.09%
@@ -12068,7 +12069,7 @@ Feature values:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import any additional functionality you may need here</span>
@@ -12080,9 +12081,13 @@ Feature values:
 <span class="n">num_test</span> <span class="o">=</span> <span class="n">X_all</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">num_train</span>
 
 <span class="c1"># TODO: Shuffle and split the dataset into the number of training and testing points above</span>
+<span class="c1"># Review-Pro-Tip: Use stratification to to ensure that relative class frequencies</span>
+<span class="c1">#   is approximately preserved in each train and validation fold.</span>
+<span class="c1">#   We do this because we&#39;re a dealing with an unbalanced dataset.</span>
+<span class="c1">#   We should also consider K-Fold cross validation as we&#39;re are dealing with a small dataset.</span>
 <span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-    <span class="n">X_all</span><span class="p">,</span> <span class="n">y_all</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="n">num_train</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">num_test</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">X_all</span><span class="p">,</span> <span class="n">y_all</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y_all</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="n">num_train</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">num_test</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># Show the results of the split</span>
 <span class="k">print</span> <span class="s2">&quot;Training set has {} samples.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -12265,7 +12270,7 @@ Still, this is a good candidate for our problem given that we have a relatively 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import the three supervised learning models from sklearn</span>
@@ -12276,7 +12281,8 @@ Still, this is a good candidate for our problem given that we have a relatively 
 <span class="c1"># TODO: Initialize the three models</span>
 <span class="n">clf_A</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
 <span class="n">clf_B</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">clf_C</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">()</span>
+<span class="c1"># Review: Set `random_state` whenever it&#39;s possible</span>
+<span class="n">clf_C</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># TODO: Set up the training set sizes</span>
 <span class="n">X_train_100</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span>
@@ -12313,59 +12319,59 @@ Still, this is a good candidate for our problem given that we have a relatively 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Training a GaussianNB using a training set size of 100. . .
-Trained model in 0.0025 seconds
-Made predictions in 0.0006 seconds.
-F1 score for training set: 0.8550.
-Made predictions in 0.0004 seconds.
-F1 score for test set: 0.7481.
-Training a GaussianNB using a training set size of 200. . .
-Trained model in 0.0010 seconds
-Made predictions in 0.0005 seconds.
-F1 score for training set: 0.8321.
-Made predictions in 0.0004 seconds.
-F1 score for test set: 0.7132.
-Training a GaussianNB using a training set size of 300. . .
-Trained model in 0.0011 seconds
-Made predictions in 0.0005 seconds.
-F1 score for training set: 0.8088.
-Made predictions in 0.0004 seconds.
-F1 score for test set: 0.7500.
-Training a DecisionTreeClassifier using a training set size of 100. . .
-Trained model in 0.0012 seconds
-Made predictions in 0.0003 seconds.
-F1 score for training set: 1.0000.
-Made predictions in 0.0003 seconds.
-F1 score for test set: 0.6942.
-Training a DecisionTreeClassifier using a training set size of 200. . .
-Trained model in 0.0021 seconds
-Made predictions in 0.0003 seconds.
-F1 score for training set: 1.0000.
-Made predictions in 0.0002 seconds.
-F1 score for test set: 0.7132.
-Training a DecisionTreeClassifier using a training set size of 300. . .
 Trained model in 0.0034 seconds
+Made predictions in 0.0031 seconds.
+F1 score for training set: 0.5833.
+Made predictions in 0.0006 seconds.
+F1 score for test set: 0.5161.
+Training a GaussianNB using a training set size of 200. . .
+Trained model in 0.0015 seconds
+Made predictions in 0.0007 seconds.
+F1 score for training set: 0.8118.
+Made predictions in 0.0005 seconds.
+F1 score for test set: 0.7576.
+Training a GaussianNB using a training set size of 300. . .
+Trained model in 0.0016 seconds
+Made predictions in 0.0007 seconds.
+F1 score for training set: 0.8000.
+Made predictions in 0.0005 seconds.
+F1 score for test set: 0.7273.
+Training a DecisionTreeClassifier using a training set size of 100. . .
+Trained model in 0.0034 seconds
+Made predictions in 0.0011 seconds.
+F1 score for training set: 1.0000.
+Made predictions in 0.0003 seconds.
+F1 score for test set: 0.7107.
+Training a DecisionTreeClassifier using a training set size of 200. . .
+Trained model in 0.0026 seconds
 Made predictions in 0.0005 seconds.
 F1 score for training set: 1.0000.
+Made predictions in 0.0005 seconds.
+F1 score for test set: 0.6885.
+Training a DecisionTreeClassifier using a training set size of 300. . .
+Trained model in 0.0042 seconds
+Made predictions in 0.0007 seconds.
+F1 score for training set: 1.0000.
 Made predictions in 0.0004 seconds.
-F1 score for test set: 0.7167.
+F1 score for test set: 0.6875.
 Training a SVC using a training set size of 100. . .
-Trained model in 0.0017 seconds
-Made predictions in 0.0010 seconds.
-F1 score for training set: 0.8591.
-Made predictions in 0.0009 seconds.
-F1 score for test set: 0.7838.
-Training a SVC using a training set size of 200. . .
-Trained model in 0.0043 seconds
-Made predictions in 0.0038 seconds.
-F1 score for training set: 0.8693.
+Trained model in 0.0039 seconds
+Made predictions in 0.0029 seconds.
+F1 score for training set: 0.8919.
 Made predictions in 0.0016 seconds.
-F1 score for test set: 0.7755.
+F1 score for test set: 0.7737.
+Training a SVC using a training set size of 200. . .
+Trained model in 0.0072 seconds
+Made predictions in 0.0050 seconds.
+F1 score for training set: 0.8795.
+Made predictions in 0.0026 seconds.
+F1 score for test set: 0.8182.
 Training a SVC using a training set size of 300. . .
-Trained model in 0.0083 seconds
-Made predictions in 0.0068 seconds.
-F1 score for training set: 0.8692.
-Made predictions in 0.0021 seconds.
-F1 score for test set: 0.7586.
+Trained model in 0.0130 seconds
+Made predictions in 0.0096 seconds.
+F1 score for training set: 0.8664.
+Made predictions in 0.0032 seconds.
+F1 score for test set: 0.8289.
 </pre>
 </div>
 </div>
@@ -12402,24 +12408,24 @@ F1 score for test set: 0.7586.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
-<td style="text-align:center">0.0025 secs</td>
-<td style="text-align:center">0.0004 secs</td>
-<td style="text-align:center">0.8550</td>
-<td style="text-align:center">0.7481</td>
+<td style="text-align:center">0.0034 secs</td>
+<td style="text-align:center">0.0006 secs</td>
+<td style="text-align:center">0.5833</td>
+<td style="text-align:center">0.5161</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">0.0010 secs</td>
-<td style="text-align:center">0.0004 secs</td>
-<td style="text-align:center">0.8321</td>
-<td style="text-align:center">0.7132</td>
+<td style="text-align:center">0.0015 secs</td>
+<td style="text-align:center">0.0005 secs</td>
+<td style="text-align:center">0.8118</td>
+<td style="text-align:center">0.7576</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">0.0011 secs</td>
-<td style="text-align:center">0.0004 secs</td>
-<td style="text-align:center">0.8088</td>
-<td style="text-align:center">0.7500</td>
+<td style="text-align:center">0.0016 secs</td>
+<td style="text-align:center">0.0005 secs</td>
+<td style="text-align:center">0.8000</td>
+<td style="text-align:center">0.7273</td>
 </tr>
 </tbody>
 </table>
@@ -12436,24 +12442,24 @@ F1 score for test set: 0.7586.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
-<td style="text-align:center">0.0012 secs</td>
+<td style="text-align:center">0.0034 secs</td>
 <td style="text-align:center">0.0003 secs</td>
 <td style="text-align:center">1.0000</td>
-<td style="text-align:center">0.6942</td>
+<td style="text-align:center">0.7107</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">0.0021 secs</td>
-<td style="text-align:center">0.0002 secs</td>
+<td style="text-align:center">0.0026 secs</td>
+<td style="text-align:center">0.0005 secs</td>
 <td style="text-align:center">1.0000</td>
-<td style="text-align:center">0.7132</td>
+<td style="text-align:center">0.6885</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">0.0034 secs</td>
+<td style="text-align:center">0.0042 secs</td>
 <td style="text-align:center">0.0004 secs</td>
 <td style="text-align:center">1.0000</td>
-<td style="text-align:center">0.7167</td>
+<td style="text-align:center">0.6875</td>
 </tr>
 </tbody>
 </table>
@@ -12470,24 +12476,24 @@ F1 score for test set: 0.7586.
 <tbody>
 <tr>
 <td style="text-align:center">100</td>
-<td style="text-align:center">0.0017 secs</td>
-<td style="text-align:center">0.0009 secs</td>
-<td style="text-align:center">0.8591</td>
-<td style="text-align:center">0.7838</td>
+<td style="text-align:center">0.0039 secs</td>
+<td style="text-align:center">0.0016 secs</td>
+<td style="text-align:center">0.8919</td>
+<td style="text-align:center">0.7737</td>
 </tr>
 <tr>
 <td style="text-align:center">200</td>
-<td style="text-align:center">0.0043 secs</td>
-<td style="text-align:center">0.0016 secs</td>
-<td style="text-align:center">0.8693</td>
-<td style="text-align:center">0.7755</td>
+<td style="text-align:center">0.0072 secs</td>
+<td style="text-align:center">0.0026 secs</td>
+<td style="text-align:center">0.8795</td>
+<td style="text-align:center">0.8182</td>
 </tr>
 <tr>
 <td style="text-align:center">300</td>
-<td style="text-align:center">0.0083 secs</td>
-<td style="text-align:center">0.0021 secs</td>
-<td style="text-align:center">0.8692</td>
-<td style="text-align:center">0.7586</td>
+<td style="text-align:center">0.0130 secs</td>
+<td style="text-align:center">0.0032 secs</td>
+<td style="text-align:center">0.8664</td>
+<td style="text-align:center">0.8289</td>
 </tr>
 </tbody>
 </table>
@@ -12575,24 +12581,29 @@ Then, the model makes a prediction by taking a test point and finding out on whi
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[73]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Import &#39;GridSearchCV&#39; and &#39;make_scorer&#39;</span>
 <span class="kn">from</span> <span class="nn">sklearn.grid_search</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">make_scorer</span>
+<span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">StratifiedShuffleSplit</span>
 
 <span class="c1"># TODO: Create the parameters list you wish to tune</span>
-<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;linear&#39;</span><span class="p">]}</span>
+<span class="c1"># Review: At least 3 different values for an important parameter</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]}</span>
 
 <span class="c1"># TODO: Initialize the classifier</span>
-<span class="n">clf</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">()</span>
+<span class="c1"># Review: `Set random_state`</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># TODO: Make an f1 scoring function using &#39;make_scorer&#39; </span>
 <span class="n">f1_scorer</span> <span class="o">=</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">f1_score</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="s1">&#39;yes&#39;</span><span class="p">)</span>
 
 <span class="c1"># TODO: Perform grid search on the classifier using the f1_scorer as the scoring method</span>
-<span class="n">grid_obj</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">f1_scorer</span><span class="p">)</span>
+<span class="c1"># Review-Pro-Tip: Do cross-validation to get the most from our small dataset</span>
+<span class="n">ssscv</span> <span class="o">=</span> <span class="n">StratifiedShuffleSplit</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">grid_obj</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">ssscv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">f1_scorer</span><span class="p">)</span>
 
 <span class="c1"># TODO: Fit the grid search object to the training data and find the optimal parameters</span>
 <span class="n">grid_obj</span> <span class="o">=</span> <span class="n">grid_obj</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
@@ -12615,10 +12626,10 @@ Then, the model makes a prediction by taking a test point and finding out on whi
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Made predictions in 0.0029 seconds.
-Tuned model has a training F1 score of 0.8421.
-Made predictions in 0.0010 seconds.
-Tuned model has a testing F1 score of 0.7826.
+<pre>Made predictions in 0.0060 seconds.
+Tuned model has a training F1 score of 0.9805.
+Made predictions in 0.0021 seconds.
+Tuned model has a testing F1 score of 0.8153.
 </pre>
 </div>
 </div>
@@ -12643,6 +12654,7 @@ Tuned model has a testing F1 score of 0.7826.
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong> F<sub>1</sub> scores for training and testing are 84.21% and 78.26% respectively. The training score is a bit lower than the untuned model but we obtain a gain of performance on testing data. This is a good example of reducing overfitting by mainly decreasing model complexity.</p>
+<p><strong>Review:</strong> F<sub>1</sub> scores for training and testing are 98.05% and 81.53% respectively. The test score is a bit lower than the untuned model but we obtain a gain of performance on training data. Tuning parameters had the effect of slightly overfitting our model in this case. Cross-validating with <code>StratifiedShuffleSplit</code> has the same effect as the default <code>StratifiedKFold</code> in this case (we get the same performance even if we remove <code>cv=ssscv</code>).</p>
 
 </div>
 </div>
@@ -12658,6 +12670,19 @@ Tuned model has a testing F1 score of 0.7826.
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
 </div>
     </div>
   </div>
